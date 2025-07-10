@@ -1,0 +1,13 @@
+{
+    "type": "code",
+    "modid": "ropephysicsfix",
+    "name": "RopePhysicsFix",
+    "authors": [
+        "Gattowski"
+    ],
+    "description": "This mod aims to improve the Rope Physics, that makes the vertical movement difficult. Aims to fix the awkward jumping while rope is attached to animal. All in all this mod plans to produce a believable and stable rope physics element in the game.",
+    "version": "1.0.0",
+    "dependencies": {
+        "game": ""
+    }
+}
