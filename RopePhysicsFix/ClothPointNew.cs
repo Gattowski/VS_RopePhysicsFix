@@ -303,38 +303,34 @@ namespace RopePhysicsFix
                         
 
                         bool isGrounded = entity.OnGround; 
+                        bool isTaut = extension > 0.01;
 
-                        // Only apply horizontal drag and push forces if grounded
-                        if (isGrounded)
+                        if (isTaut && isGrounded)
                         {
                             Vec3d tensionDrag = new Vec3d(
-                            ClampComponent(TensionDirection.X, gravityForce, 400.0),
-                            ClampComponent(TensionDirection.Y, gravityForce, 600.0),
-                            ClampComponent(TensionDirection.Z, gravityForce, 400.0)
-                        ) * num4;
+                                ClampComponent(TensionDirection.X, pullBackDiag, 500.0),
+                                ClampComponent(TensionDirection.Y, pullBackDiag, 600.0),
+                                ClampComponent(TensionDirection.Z, pullBackDiag, 500.0)
+                            ) * num4;
 
                             entity.SidedPos.Motion.Add(tensionDrag);
                             entity.SidedPos.Motion.Add(horizontalMotion);
                         }
-                        else
+                        else if (isTaut)
                         {
-                            
                             Vec3d reducedHorizontal = horizontalMotion * 0.05;
                             entity.SidedPos.Motion.Add(reducedHorizontal);
                             // No tension drag in air
                         }
-
-                        bool applyVertical = extension > 0.01f && entity.OnGround == false;
-
-                        if (applyVertical)
+                        else
                         {
-                            entity.SidedPos.Motion.Y += verticalMotion;
+                            // No tension, no forces applied
                         }
 
 
 
 
-                        
+
 
                     }
 
