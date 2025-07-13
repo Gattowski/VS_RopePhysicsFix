@@ -303,7 +303,7 @@ namespace RopePhysicsFix
                         
 
                         bool isGrounded = entity.OnGround; 
-                        bool isTaut = extension > 0.01;
+                        bool isTaut = extension > 0.1;            // rope pull on rested length (e.g 0.00 value = 2 blocks away for bighorn ram when sitting before forces start pulling)
 
                         if (isTaut && isGrounded)
                         {
