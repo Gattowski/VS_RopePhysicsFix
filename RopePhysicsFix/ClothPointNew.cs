@@ -321,10 +321,6 @@ namespace RopePhysicsFix
 
                             entity.SidedPos.Motion.Add(tensionDrag);
 
-                            //entity.SidedPos.Motion.Add(GameMath.Clamp(Math.Abs(TensionDirection.X) - (double)num3, 0.0, 400.0) * (double)num4 * (double)Math.Sign(TensionDirection.X), GameMath.Clamp(Math.Abs(TensionDirection.Y) - (double)num3, 0.0, 400.0) * (double)num4 * (double)Math.Sign(TensionDirection.Y), GameMath.Clamp(Math.Abs(TensionDirection.Z) - (double)num3, 0.0, 400.0) * (double)num4 * (double)Math.Sign(TensionDirection.Z));
-
-
-
                         }
                         else
                         {
