@@ -289,16 +289,16 @@ namespace RopePhysicsFix
                         double horizontalForce = Math.Sqrt(totalPushForce * totalPushForce + gravityForce * gravityForce);
                         double verticalForce = -gravityForce;  // Negative since gravity pulls down
 
-                        // Final motion vectors
-                        Vec3d horizontalMotion = dirXZ * horizontalForce;
-                        double verticalMotion = dirY * verticalForce;
+                        // Final motion vectors Not needed yet
+                        //Vec3d horizontalMotion = dirXZ * horizontalForce;
+                        //double verticalMotion = dirY * verticalForce;
 
 
 
 
 
                         bool isGrounded = entity.OnGround;
-                        bool isTaut = extension > 0.05;            // rope pull on rested length (e.g 0.00 value = 2 blocks away for bighorn ram when sitting before forces start pulling)
+                        bool isTaut = extension > 0.05;            
 
                         if (isTaut && isGrounded)
                         {
