@@ -258,8 +258,8 @@ namespace RopePhysicsFix
                         Vec3d direction = TensionDirection.Clone();
                         direction.Normalize();
 
-                        double tensionForce = AnimalWeight * 1.65f;
-                        double gravityForce = 1.0f;
+                        double tensionForce = num3 * 1.65f;
+                        double gravityForce = num3;
 
                         // Horizontal direction (XZ only)
                         Vec3d dirXZ = new Vec3d(direction.X, 0, direction.Z);
@@ -281,57 +281,55 @@ namespace RopePhysicsFix
                         double pullBackDiag = Math.Sqrt(tensionForce * tensionForce + gravityForce * gravityForce);
 
                         // Compute push needed from player
-                        double velocityForce = weight * 1.65f;
+                        double velocityForce = num3 * 1.65f;
                         double extraForce = tensionForce - velocityForce; // extra force to pull the animal 
                         double totalPushForce = velocityForce + extraForce;
 
                         // Separate horizontal and vertical move forces
-                        double horizontalForce = Math.Sqrt(totalPushForce * totalPushForce + gravityForce * gravityForce) * num4;
-                        double verticalForce = -gravityForce * num4;  // Negative since gravity pulls down
+                        double horizontalForce = Math.Sqrt(totalPushForce * totalPushForce + gravityForce * gravityForce);
+                        double verticalForce = -gravityForce;  // Negative since gravity pulls down
 
                         // Final motion vectors
                         Vec3d horizontalMotion = dirXZ * horizontalForce;
                         double verticalMotion = dirY * verticalForce;
 
-                        // Clamp drag only horizontally
-                        double ClampComponent(double value, double threshold, double maxVal)
-                        {
-                            double absVal = Math.Abs(value);
-                            return GameMath.Clamp(absVal - threshold, 0.0, maxVal) * Math.Sign(value);
-                        }
 
-                        
 
-                        bool isGrounded = entity.OnGround; 
-                        bool isTaut = extension > 0.1;            // rope pull on rested length (e.g 0.00 value = 2 blocks away for bighorn ram when sitting before forces start pulling)
+
+
+                        bool isGrounded = entity.OnGround;
+                        bool isTaut = extension > 0.05;            // rope pull on rested length (e.g 0.00 value = 2 blocks away for bighorn ram when sitting before forces start pulling)
 
                         if (isTaut && isGrounded)
                         {
                             Vec3d tensionDrag = new Vec3d(
-                                ClampComponent(TensionDirection.X, pullBackDiag, 500.0),
-                                ClampComponent(TensionDirection.Y, pullBackDiag, 600.0),
-                                ClampComponent(TensionDirection.Z, pullBackDiag, 500.0)
-                            ) * num4;
+                                GameMath.Clamp(Math.Abs(TensionDirection.X) + horizontalForce - pullBackDiag, 0.0, 400.0) * Math.Sign(TensionDirection.X),
+                                GameMath.Clamp(Math.Abs(TensionDirection.Y) + horizontalForce - pullBackDiag + verticalForce, 0.0, 400.0) * Math.Sign(TensionDirection.Y),
+                                GameMath.Clamp(Math.Abs(TensionDirection.Z) + horizontalForce - pullBackDiag, 0.0, 400.0) * Math.Sign(TensionDirection.Z)
+                             ) * num4;
 
                             entity.SidedPos.Motion.Add(tensionDrag);
-                            entity.SidedPos.Motion.Add(horizontalMotion);
+                            //entity.SidedPos.Motion.Add(horizontalMotion);
                         }
                         else if (isTaut)
                         {
-                            Vec3d reducedHorizontal = horizontalMotion * 0.05;
-                            entity.SidedPos.Motion.Add(reducedHorizontal);
-                            // No tension drag in air
+                            Vec3d tensionDrag = new Vec3d(
+                                GameMath.Clamp(Math.Abs((TensionDirection.X) * 0.1) + (horizontalForce - pullBackDiag) * 0.5, 0.0, 400.0) * Math.Sign(TensionDirection.X),
+                                GameMath.Clamp(Math.Abs((TensionDirection.Y) * 0.3) + horizontalForce - pullBackDiag + verticalForce, 0.0, 400.0) * Math.Sign(TensionDirection.Y),
+                                GameMath.Clamp(Math.Abs((TensionDirection.Z) * 0.1) + (horizontalForce - pullBackDiag) * 0.5, 0.0, 400.0) * Math.Sign(TensionDirection.Z)
+                             ) * num4;
+
+                            entity.SidedPos.Motion.Add(tensionDrag);
+
+                            //entity.SidedPos.Motion.Add(GameMath.Clamp(Math.Abs(TensionDirection.X) - (double)num3, 0.0, 400.0) * (double)num4 * (double)Math.Sign(TensionDirection.X), GameMath.Clamp(Math.Abs(TensionDirection.Y) - (double)num3, 0.0, 400.0) * (double)num4 * (double)Math.Sign(TensionDirection.Y), GameMath.Clamp(Math.Abs(TensionDirection.Z) - (double)num3, 0.0, 400.0) * (double)num4 * (double)Math.Sign(TensionDirection.Z));
+
+
+
                         }
                         else
                         {
-                            // No tension, no forces applied
+                            // No forces applied
                         }
-
-
-
-
-
-
                     }
 
                     Velocity.Set(0f, 0f, 0f);
