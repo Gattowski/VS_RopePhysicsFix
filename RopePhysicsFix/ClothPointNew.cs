@@ -309,7 +309,7 @@ namespace RopePhysicsFix
                              ) * num4;
 
                             entity.SidedPos.Motion.Add(tensionDrag);
-                            //entity.SidedPos.Motion.Add(horizontalMotion);
+                            
                         }
                         else if (isTaut)
                         {
